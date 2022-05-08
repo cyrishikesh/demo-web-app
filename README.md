@@ -1,2 +1,3 @@
 # demo-web-app
-data visualization app 
+
+data visualization app
