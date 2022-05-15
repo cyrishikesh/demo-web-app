@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useAuth } from "../../provider/AuthProvider";
 import GoogleIcon from "../../assests/google.png";
 import { useNavigate } from "react-router-dom";
+import { Alert, Snackbar } from "@mui/material";
 
 export const SignUpOrSignInFormStyleWrapper = styled.div`
   form {
@@ -79,8 +80,8 @@ const SignUpForm: React.FC = () => {
   if (user) {
     navigate("/homePage");
   }
-  const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -91,14 +92,14 @@ const SignUpForm: React.FC = () => {
     onSubmit: (values) => {
       console.log("[Form values]", values);
       if (values.confirmPassword !== values.password) {
-        setError("Password didn't match, Please try again!");
+        setToastMessage("Password didn't match, Please try again!");
         return;
       }
       try {
         setLoading(true);
         signUp(values.email, values.password);
       } catch {
-        setError("Password didn't match, Please try again!");
+        setToastMessage("Sign up failed for some reason, Please try again!");
       }
       setLoading(false);
     },
@@ -106,6 +107,22 @@ const SignUpForm: React.FC = () => {
 
   return (
     <SignUpOrSignInFormStyleWrapper>
+      {toastMessage && (
+        <Snackbar
+          open={true}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => setToastMessage("")}
+        >
+          <Alert
+            onClose={() => setToastMessage("")}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {toastMessage}
+          </Alert>
+        </Snackbar>
+      )}
       <div className="google-auth-wrapper" onClick={signInWithGoogle}>
         Sign Up with
         <img className="google-logo" alt="GoogleIcon" src={GoogleIcon} />
@@ -143,7 +160,6 @@ const SignUpForm: React.FC = () => {
               value={formik.values.confirmPassword}
             />
           </div>
-          {error && <div>{error}</div>}
           <div style={{ textAlign: "center" }}>
             <button type="submit" disabled={isLoading}>
               Submit
