@@ -11,6 +11,10 @@ const HomePageStyledWrapper = styled.div`
   align-items: center;
   color: #525564;
 
+  .loading {
+    padding-left: 100px;
+    padding-top: 250px;
+  }
   .select-country {
     display: flex;
     flex-direction: column;
@@ -41,7 +45,9 @@ const HomePageStyledWrapper = styled.div`
 const HomePage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-
+  const [initalLoadingMessage, setInitialLoadingMessage] = useState(
+    "Loading country List ....."
+  );
   if (!user) {
     navigate("/signIn");
   }
@@ -52,9 +58,13 @@ const HomePage: React.FC = () => {
       .getCountryList()
       .then((itemlist) => {
         setCountryList(itemlist);
+        setInitialLoadingMessage("");
       })
       .catch((error) => {
         console.log("Error in retrieving the countryList, Error is:", error);
+        setInitialLoadingMessage(
+          "Error in retrieving the countryList, please refresh the page"
+        );
       });
   }, []);
 
@@ -63,6 +73,9 @@ const HomePage: React.FC = () => {
       <div>
         Select country to visulize the revenue data of company in the country
       </div>
+      {initalLoadingMessage && (
+        <div className="loading">{initalLoadingMessage}</div>
+      )}
       <div className="select-country">
         {countryList.map((country, index) => {
           return (

@@ -7,7 +7,7 @@ const HeaderStyledWrapper = styled.div`
     height: 80px;
     display: flex;
     align-items: center;
-    padding: 24px 100px 48px;
+    padding: 16px 100px 40px;
     justify-content: space-between;
 
     .logo {
@@ -49,7 +49,7 @@ const Header: React.FC = () => {
   return (
     <HeaderStyledWrapper>
       <div className="header">
-        <a href="https://www.getmega.com/" className="logo">
+        <a href="/homePage" className="logo">
           GetMegaDemo
         </a>
         <div style={{ display: "flex" }}>
